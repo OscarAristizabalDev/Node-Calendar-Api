@@ -1,4 +1,4 @@
-export class User{
+export class IUser{
     email: string
     name: string
     password: string

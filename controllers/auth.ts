@@ -1,24 +1,36 @@
 import { Request, Response } from 'express';
+const User = require('../models/UserModel')
 
-import { User } from '../models/user';
+import { IUser } from '../interfaces/IUser';
 
 
-export const crearUsuario = (req: Request, resp: Response) => {
+export const crearUsuario = async (req: Request, resp: Response) => {
 
-    const { email, name, password }: User = req.body;
+    const { email, name, password }: IUser = req.body;
 
-    return resp.status(201).json({
-        ok: true,
-        email,
-        name,
-        password
-    })
+    try {
+        const user = new User(req.body);
+        await user.save();
+
+        return resp.status(201).json({
+            ok: true,
+            email,
+            name,
+            password
+        })
+    } catch (error) {
+        console.log(error)
+        resp.status(500).json({
+            ok: false,
+            message: 'Por favor comuniquese con el administrador'
+        })
+    }
 }
 
 
 export const loginUsuario = (req: Request, resp: Response) => {
 
-    const { email, password }: User = req.body;
+    const { email, password }: IUser = req.body;
 
     return resp.json({
         ok: true,
