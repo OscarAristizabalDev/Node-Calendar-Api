@@ -2,15 +2,16 @@
     Rutas de usuario / auth
     host + /api/auth
 */
-import { Router, Request, Response } from 'express';
-
+import { Router } from 'express';
 const router = Router();
 
-router.get('/', (req: Request, resp: Response) => {
-    resp.json({
-        ok: true
-    })
-});
+import { crearUsuario, loginUsuario, revalidarToken } from '../controllers/auth' 
+
+router.post('/create', crearUsuario);
+
+router.post('/', loginUsuario);
+
+router.get('/renew', revalidarToken);
 
 // Se exportar todos los router
 module.exports = router;
