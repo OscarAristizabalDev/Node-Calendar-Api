@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv'; // paquete requerido para acceder a las variables de entorno creadas en el archivo .env
+import { dbConnection } from './database/config';
 
 // configuración requerida para el uso de variables de entorno
 dotenv.config();
@@ -7,6 +8,8 @@ dotenv.config();
 // Crear el servidor de express
 const app = express();
 
+// Base de datos
+dbConnection();
 
 // Directorio público
 app.use(express.static('public'));
