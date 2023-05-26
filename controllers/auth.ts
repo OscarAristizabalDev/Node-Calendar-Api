@@ -6,18 +6,28 @@ import { IUser } from '../interfaces/IUser';
 
 export const crearUsuario = async (req: Request, resp: Response) => {
 
-    const { email, name, password }: IUser = req.body;
+    const { email, password }: IUser = req.body;
 
     try {
-        const user = new User(req.body);
+
+        let user = await User.findOne({ email });
+        // si existe el usuario
+        if (user) {
+            return resp.status(400).json({
+                ok: false,
+                message: `El usuario ya existe con el correo ${email}`
+            })
+        }
+
+        user = new User(req.body);
         await user.save();
 
         return resp.status(201).json({
             ok: true,
-            email,
-            name,
-            password
+            uid: user.id,
+            name: user.name
         })
+        
     } catch (error) {
         console.log(error)
         resp.status(500).json({
