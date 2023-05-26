@@ -22,9 +22,9 @@ export const crearUsuario = async (req: Request, resp: Response) => {
 
         user = new User(req.body);
         // Encriptar contrasenia
-        const salt = bcrypt.genSaltSync();        
+        const salt = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(password, salt);
-        
+
         await user.save();
 
         // Genera JWT
@@ -47,12 +47,12 @@ export const crearUsuario = async (req: Request, resp: Response) => {
 }
 
 
-export const loginUsuario = async(req: Request, resp: Response) => {
+export const loginUsuario = async (req: Request, resp: Response) => {
 
     const { email, password }: IUser = req.body;
 
     try {
-        
+
         const user = await User.findOne({ email });
         // si no existe el usuario
         if (!user) {
@@ -64,7 +64,7 @@ export const loginUsuario = async(req: Request, resp: Response) => {
 
         // confirmar los passwords
         const isPasswordValid = bcrypt.compareSync(password, user.password);
-        if(!isPasswordValid){
+        if (!isPasswordValid) {
             return resp.status(400).json({
                 ok: false,
                 message: `Password incorrecto`
@@ -91,9 +91,21 @@ export const loginUsuario = async(req: Request, resp: Response) => {
     }
 }
 
-export const revalidarToken = (req: Request, resp: Response) => {
+/**
+ * Permite crear un nuevo token
+ * @param req 
+ * @param resp 
+ */
+export const revalidarToken = async (req: any, resp: Response) => {
+
+    const { uid, name } = req;
+
+    // Se genera un nuevo JWT
+    const token = await generarJWT(uid, name);
+
+
     resp.json({
         ok: true,
-        message: 'Renew token'
+        token
     })
 }

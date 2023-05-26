@@ -8,6 +8,7 @@ const router = Router();
 
 import { crearUsuario, loginUsuario, revalidarToken } from '../controllers/auth'
 import { validarCampos } from '../middlewares/validarCampos';
+import { validarJWT } from '../middlewares/validarJwt';
 
 router.post(
     '/create',
@@ -28,7 +29,8 @@ router.post(
     ], 
     loginUsuario);
 
-router.get('/renew', revalidarToken);
+// validarJWT es un middleware
+router.get('/renew', validarJWT, revalidarToken);
 
 // Se exportar todos los router
 module.exports = router;
