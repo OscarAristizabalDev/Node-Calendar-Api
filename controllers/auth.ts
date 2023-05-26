@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+const bcrypt = require('bcryptjs');
 const User = require('../models/UserModel')
 
 import { IUser } from '../interfaces/IUser';
@@ -20,6 +21,10 @@ export const crearUsuario = async (req: Request, resp: Response) => {
         }
 
         user = new User(req.body);
+        // Encriptar contrasenia
+        const salt = bcrypt.genSaltSync();        
+        user.password = bcrypt.hashSync(password, salt);
+        
         await user.save();
 
         return resp.status(201).json({
@@ -27,7 +32,7 @@ export const crearUsuario = async (req: Request, resp: Response) => {
             uid: user.id,
             name: user.name
         })
-        
+
     } catch (error) {
         console.log(error)
         resp.status(500).json({
