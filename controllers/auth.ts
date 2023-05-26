@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 const bcrypt = require('bcryptjs');
+
 const User = require('../models/UserModel')
-
 import { IUser } from '../interfaces/IUser';
-
+import { generarJWT } from '../helpers/jwt';
 
 export const crearUsuario = async (req: Request, resp: Response) => {
 
@@ -27,10 +27,14 @@ export const crearUsuario = async (req: Request, resp: Response) => {
         
         await user.save();
 
+        // Genera JWT
+        const token = await generarJWT(user.id, user.name);
+
         return resp.status(201).json({
             ok: true,
             uid: user.id,
-            name: user.name
+            name: user.name,
+            token
         })
 
     } catch (error) {
@@ -68,11 +72,14 @@ export const loginUsuario = async(req: Request, resp: Response) => {
         }
 
         // Generar JWT
+        const token = await generarJWT(user.id, user.name);
+
         return resp.json({
             ok: true,
             message: 'Login',
             uid: user.id,
-            name: user.name
+            name: user.name,
+            token
         })
 
     } catch (error) {
