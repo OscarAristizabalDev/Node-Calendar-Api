@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv'; // paquete requerido para acceder a las variables de entorno creadas en el archivo .env
+const cors = require('cors');
 import { dbConnection } from './database/config';
 
 // configuración requerida para el uso de variables de entorno
@@ -10,6 +11,9 @@ const app = express();
 
 // Base de datos
 dbConnection();
+
+// CORS
+app.use(cors());
 
 // Directorio público
 app.use(express.static('public'));
