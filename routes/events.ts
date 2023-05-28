@@ -9,10 +9,14 @@ import { validarJWT } from '../middlewares/validarJwt';
 
 const router = Router();
 
-router.get('/', validarJWT, getEventos);
-router.post('/create', validarJWT, CrearEvento);
-router.put('/update', validarJWT, ActualizarEvento);
-router.delete('/delete', validarJWT, EliminarEvento);
+// Todos tienen que pasar por la validacion del JWT
+router.use(validarJWT)
+
+
+router.get('/', getEventos);
+router.post('/create', CrearEvento);
+router.put('/update/:id', ActualizarEvento);
+router.delete('/delete/:id', EliminarEvento);
 
 // Se exportar todos los router
 module.exports = router;
