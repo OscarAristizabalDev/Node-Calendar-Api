@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+const Event = require('../models/EventModel')
+
 
 export const getEventos = async (req: Request, resp: Response) => {
     return resp.status(200).json({
@@ -8,14 +10,25 @@ export const getEventos = async (req: Request, resp: Response) => {
     })
 }
 
-export const CrearEvento = async (req: Request, resp: Response) => {
+export const CrearEvento = async (req: any, resp: Response) => {
 
-    console.log(req.body)
+    const evento = new Event(req.body);
 
-    return resp.status(201).json({
-        ok: true,
-        message: 'CrearEvento'
-    })
+    try {
+        evento.user = req.uid
+        const eventoGuardado = await evento.save();
+        resp.status(201).json({
+            ok: true,
+            evento: eventoGuardado
+        })
+
+    } catch (error) {
+        console.log(error);
+        resp.status(500).json({
+            ok: false,
+            message: "Hable con el administrador"
+        })
+    }
 }
 
 export const ActualizarEvento = async (req: Request, resp: Response) => {
