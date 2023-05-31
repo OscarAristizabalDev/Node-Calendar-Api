@@ -26,7 +26,15 @@ router.post(
         validarCampos
     ],
     CrearEvento);
-router.put('/update/:id', ActualizarEvento);
+router.put(
+    '/update/:id', 
+    [
+        check('title', 'EL título es obligatorio').not().isEmpty(),
+        check('start', 'Fecha de inicio es obligatoria').custom(isDate),
+        check('end', 'Fecha de finalización es obligatoria').custom(isDate),
+        validarCampos
+    ],
+    ActualizarEvento);
 router.delete('/delete/:id', EliminarEvento);
 
 // Se exportar todos los router
