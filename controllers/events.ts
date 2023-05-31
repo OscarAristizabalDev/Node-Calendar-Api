@@ -4,10 +4,24 @@ const Event = require('../models/EventModel')
 
 
 export const getEventos = async (req: Request, resp: Response) => {
-    return resp.status(200).json({
-        ok: true,
-        message: 'getEventos'
-    })
+
+    try {
+        // permite traer los eventos junto con la información del usuario (se obtiene solo el name)
+        const eventos = await Event.find().populate('user', 'name');
+
+        return resp.status(200).json({
+            ok: true,
+            eventos
+        })
+
+    } catch (error) {
+        console.log(error);
+        resp.status(500).json({
+            ok: false,
+            message: "Hable con el administrador"
+        })
+    }
+
 }
 
 export const CrearEvento = async (req: any, resp: Response) => {

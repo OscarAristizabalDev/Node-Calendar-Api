@@ -4,7 +4,7 @@ import { IEvent } from '../interfaces/IEvent';
 const EventoSchema = new Schema<IEvent>({
 
     title: { type: String, required: true },
-    notes: { type: String },
+    notas: { type: String },
     start: { type: Date, required: true },
     end: { type: Date, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Se hace una referencia al objeto User
