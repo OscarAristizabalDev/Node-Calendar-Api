@@ -9,6 +9,9 @@ export const getEventos = async (req: Request, resp: Response) => {
 }
 
 export const CrearEvento = async (req: Request, resp: Response) => {
+
+    console.log(req.body)
+
     return resp.status(201).json({
         ok: true,
         message: 'CrearEvento'
