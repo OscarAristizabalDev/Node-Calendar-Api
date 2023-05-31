@@ -51,7 +51,6 @@ export const ActualizarEvento = async (req: any, resp: Response) => {
     const uid = req.uid;
     // Se toma el id que viene por la url
     const eventoId = req.params.id;
-    console.log(eventoId)
     try {
 
         // Se busca el evento en la base de datos
@@ -93,9 +92,46 @@ export const ActualizarEvento = async (req: any, resp: Response) => {
     }
 }
 
-export const EliminarEvento = async (req: Request, resp: Response) => {
-    return resp.status(200).json({
-        ok: true,
-        message: 'EliminarEvento'
-    })
+export const EliminarEvento = async (req: any, resp: Response) => {
+
+    // Se obtiene el uid del usuario
+    const uid = req.uid;
+    // Se toma el id que viene por la url
+    const eventoId = req.params.id;
+
+    try {
+
+        // Se busca el evento en la base de datos
+        const evento = await Event.findById(eventoId);
+        if (!evento) {
+            return resp.status(404).json({
+                ok: false,
+                message: 'El evento no existe por ese id'
+            })
+        }
+
+        // Si el usuario del evento es diferente al autenticado
+        if (evento.user.toString() !== uid) {
+            return resp.status(401).json({
+                ok: false,
+                message: 'No tiene privilegios de eliminar este evento'
+            })
+        }
+
+        // permite buscar y actualizar el evento en BD, new: true indica que se retorne el evento actualizado, no el anterior
+        const eventoEliminado = await Event.findByIdAndDelete(eventoId);
+
+        return resp.status(200).json({
+            ok: true,
+            evento: eventoEliminado
+        })
+
+    } catch (error) {
+        console.log(error);
+        resp.status(500).json({
+            ok: false,
+            message: "Hable con el administrador"
+        })
+    }
+
 }
