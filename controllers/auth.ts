@@ -105,7 +105,9 @@ export const revalidarToken = async (req: any, resp: Response) => {
 
 
     resp.json({
+        name,
         ok: true,
-        token
+        token,
+        uid
     })
 }
